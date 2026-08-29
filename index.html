@@ -1,58 +1,262 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>DeevuCore</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icon.png">
+
+  <meta name="theme-color" content="#0f172a">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      transition: 0.3s;
+    }
+
+    body.light {
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: auto;
+      padding: 25px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 38px;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      font-size: 18px;
+      opacity: 0.75;
+    }
+
+    .theme-btn {
+      border: none;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .card {
+      background: #1e293b;
+      border-radius: 20px;
+      padding: 22px;
+      margin-top: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    body.light .card {
+      background: white;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 25px;
+    }
+
+    #clock {
+      font-size: 28px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      border-radius: 12px;
+      border: 2px solid #475569;
+      background: #1e293b;
+      color: white;
+      font-size: 16px;
+      outline: none;
+    }
+
+    body.light input {
+      background: white;
+      color: #0f172a;
+      border-color: #cbd5e1;
+    }
+
+    button.action {
+      margin-top: 12px;
+      padding: 13px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    ul {
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #334155;
+      padding: 13px;
+      margin-top: 10px;
+      border-radius: 12px;
+    }
+
+    body.light li {
+      background: #e2e8f0;
+    }
+
+    li.completed .task-text {
+      text-decoration: line-through;
+      opacity: 0.55;
+    }
+
+    .task-text {
+      flex: 1;
+      cursor: pointer;
+    }
+
+    .delete-btn {
+      border: none;
+      background: transparent;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .progress-box {
+      margin-top: 15px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 18px;
+      background: #475569;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #22c55e;
+      transition: width 0.3s;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .stat {
+      padding: 15px;
+      text-align: center;
+      background: #334155;
+      border-radius: 14px;
+    }
+
+    body.light .stat {
+      background: #e2e8f0;
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .reset-btn {
+      background: #ef4444;
+      color: white;
+    }
+
+    .complete-btn {
+      background: #22c55e;
+      color: white;
+    }
+
+    footer {
+      text-align: center;
+      margin: 30px 0 10px;
+      opacity: 0.65;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 18px;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header>
+  <div class="container">
 
-    <div class="top-bar">
-
+    <header>
       <div>
-        <div class="brand">⚡ DeevuCore</div>
-        <p>My Personal Productivity Dashboard</p>
+        <h1>⚡ DeevuCore</h1>
+        <div class="subtitle">
+          My Personal Productivity Dashboard
+        </div>
       </div>
 
-      <button
-        class="theme-btn"
-        onclick="toggleTheme()"
-        id="themeButton"
-        aria-label="Toggle theme"
-      >
+      <button class="theme-btn" onclick="toggleTheme()" id="themeButton">
         ☀️
       </button>
+    </header>
 
+
+    <!-- CLOCK -->
+
+    <div class="card">
+      <h2>🕒 Current Time</h2>
+      <div id="clock">Loading...</div>
     </div>
 
-  </header>
 
+    <!-- GOAL -->
 
-  <main>
-
-    <!-- CURRENT TIME -->
-    <section class="card">
-
-      <h2>🕒 Current Time</h2>
-
-      <div id="clock">
-        Loading...
-      </div>
-
-    </section>
-
-
-    <!-- DAILY GOAL -->
-    <section class="card">
-
+    <div class="card">
       <h2>🎯 Today's Goal</h2>
 
       <input
@@ -61,268 +265,211 @@
         placeholder="What is your main goal today?"
       >
 
-      <button onclick="saveGoal()">
+      <button class="action" onclick="saveGoal()">
         Save Goal
       </button>
 
-      <div id="goal"></div>
-
-    </section>
+      <p id="goalDisplay"></p>
+    </div>
 
 
     <!-- TODO -->
-    <section class="card">
 
+    <div class="card">
       <h2>📝 To-Do List</h2>
 
-      <div class="input-row">
+      <input
+        id="taskInput"
+        type="text"
+        placeholder="Add a task..."
+        onkeydown="handleTaskEnter(event)"
+      >
 
-        <input
-          id="taskInput"
-          type="text"
-          placeholder="Add a task..."
-          onkeydown="handleTaskEnter(event)"
-        >
-
-        <button onclick="addTask()">
-          Add
-        </button>
-
-      </div>
+      <button class="action" onclick="addTask()">
+        Add
+      </button>
 
       <ul id="taskList"></ul>
+    </div>
 
-    </section>
 
+    <!-- STUDY -->
 
-    <!-- STUDY PROGRESS -->
-    <section class="card">
+    <div class="card">
 
       <h2>📚 Study Progress</h2>
 
-      <div class="progress-info">
+      <div class="progress-box">
 
-        <span>Today's Progress</span>
+        <div id="progressText">
+          Today's Progress 0%
+        </div>
 
-        <span id="progressText">
-          0%
-        </span>
+        <div class="progress-bar">
+          <div
+            class="progress-fill"
+            id="progressFill">
+          </div>
+        </div>
 
       </div>
 
-      <div class="progress-bar">
-
-        <div id="progress"></div>
-
-      </div>
-
-      <button onclick="increaseProgress()">
+      <button
+        class="action complete-btn"
+        onclick="completeStudy()">
         + Complete Study
       </button>
 
       <button
-        class="secondary-btn"
-        onclick="resetProgress()"
-      >
-        Reset
+        class="action reset-btn"
+        onclick="resetToday()">
+        Reset Today
       </button>
 
-    </section>
+      <div class="stats">
 
+        <div class="stat">
+          <div class="stat-number" id="completedCount">
+            0
+          </div>
+          <div>✅ Completed</div>
+        </div>
 
-    <!-- STATISTICS -->
-    <section class="card stats">
+        <div class="stat">
+          <div class="stat-number" id="totalCount">
+            0
+          </div>
+          <div>📋 Total Tasks</div>
+        </div>
 
-      <div>
-
-        <span>✅</span>
-
-        <strong id="completed">
-          0
-        </strong>
-
-        <small>
-          Completed
-        </small>
-
-      </div>
-
-
-      <div>
-
-        <span>📋</span>
-
-        <strong id="total">
-          0
-        </strong>
-
-        <small>
-          Total Tasks
-        </small>
+        <div class="stat">
+          <div class="stat-number" id="streakCount">
+            0
+          </div>
+          <div>🔥 Day Streak</div>
+        </div>
 
       </div>
 
-
-      <div>
-
-        <span>🔥</span>
-
-        <strong id="streak">
-          1
-        </strong>
-
-        <small>
-          Day Streak
-        </small>
-
-      </div>
-
-    </section>
-
-  </main>
+    </div>
 
 
-  <footer>
-
-    <p>
+    <footer>
       Built with ❤️ by Deevu
-    </p>
+    </footer>
 
-  </footer>
+  </div>
 
 
   <script>
 
-    /* =========================================
-       LOCAL DATE
-       ========================================= */
+    /* =========================
+       DATE
+    ========================= */
 
     function getToday() {
+      const date = new Date();
 
-      const now = new Date();
-
-      const year = now.getFullYear();
-
-      const month =
-        String(now.getMonth() + 1).padStart(2, "0");
-
-      const day =
-        String(now.getDate()).padStart(2, "0");
-
-      return `${year}-${month}-${day}`;
-
+      return date.getFullYear() + "-" +
+        String(date.getMonth() + 1).padStart(2, "0") + "-" +
+        String(date.getDate()).padStart(2, "0");
     }
 
 
-    /* =========================================
+    /* =========================
        DAILY RESET
-       ========================================= */
+    ========================= */
 
-    const today = getToday();
+    function checkDailyReset() {
 
-    const savedDate =
-      localStorage.getItem("devuDate");
+      const today = getToday();
+      const savedDate = localStorage.getItem("deevucoreDate");
 
+      if (savedDate !== today) {
 
-    if (savedDate !== today) {
+        localStorage.removeItem("deevucoreGoal");
+        localStorage.removeItem("deevucoreTasks");
+        localStorage.removeItem("studyCompleted");
 
-      localStorage.removeItem("dailyGoal");
-
-      localStorage.removeItem("tasks");
-
-      localStorage.removeItem("progress");
-
-      localStorage.setItem(
-        "devuDate",
-        today
-      );
-
+        localStorage.setItem(
+          "deevucoreDate",
+          today
+        );
+      }
     }
 
 
-    /* =========================================
+    /* =========================
        CLOCK
-       ========================================= */
+    ========================= */
 
     function updateClock() {
 
       const now = new Date();
 
+      const date =
+        now.toLocaleDateString("en-IN");
+
+      const time =
+        now.toLocaleTimeString("en-IN");
+
       document.getElementById("clock").textContent =
-        now.toLocaleDateString() +
-        " • " +
-        now.toLocaleTimeString();
-
+        date + " • " + time;
     }
-
 
     setInterval(updateClock, 1000);
 
     updateClock();
 
 
-    /* =========================================
-       THEME SYSTEM
-       ========================================= */
+    /* =========================
+       THEME
+    ========================= */
 
-    let theme =
-      localStorage.getItem("theme") || "dark";
+    function toggleTheme() {
+
+      document.body.classList.toggle("light");
+
+      const isLight =
+        document.body.classList.contains("light");
+
+      localStorage.setItem(
+        "deevucoreTheme",
+        isLight ? "light" : "dark"
+      );
+
+      document.getElementById(
+        "themeButton"
+      ).textContent =
+        isLight ? "🌙" : "☀️";
+    }
 
 
-    function applyTheme() {
+    function loadTheme() {
 
-      const button =
-        document.getElementById("themeButton");
-
+      const theme =
+        localStorage.getItem("deevucoreTheme");
 
       if (theme === "light") {
 
         document.body.classList.add("light");
 
-        button.textContent = "🌙";
-
-        button.title = "Switch to Dark Mode";
-
-      } else {
-
-        document.body.classList.remove("light");
-
-        button.textContent = "☀️";
-
-        button.title = "Switch to Light Mode";
-
-      }
-
-    }
-
-
-    function toggleTheme() {
-
-      if (theme === "dark") {
-
-        theme = "light";
+        document.getElementById(
+          "themeButton"
+        ).textContent = "🌙";
 
       } else {
 
-        theme = "dark";
-
+        document.getElementById(
+          "themeButton"
+        ).textContent = "☀️";
       }
-
-
-      localStorage.setItem(
-        "theme",
-        theme
-      );
-
-
-      applyTheme();
-
     }
 
 
-    /* =========================================
-       DAILY GOAL
-       ========================================= */
+    /* =========================
+       GOAL
+    ========================= */
 
     function saveGoal() {
 
@@ -332,54 +479,57 @@
       const goal =
         input.value.trim();
 
-
-      if (goal === "") {
-
-        return;
-
-      }
-
+      if (goal === "") return;
 
       localStorage.setItem(
-        "dailyGoal",
+        "deevucoreGoal",
         goal
       );
 
-
-      showGoal(goal);
-
+      displayGoal();
 
       input.value = "";
-
     }
 
 
-    function showGoal(goal) {
+    function displayGoal() {
 
-      document.getElementById("goal")
-        .textContent =
-        "🎯 " + goal;
+      const goal =
+        localStorage.getItem("deevucoreGoal");
 
+      const display =
+        document.getElementById("goalDisplay");
+
+      if (goal) {
+
+        display.textContent =
+          "🎯 " + goal;
+
+      } else {
+
+        display.textContent = "";
+      }
     }
 
 
-    /* =========================================
-       TASK SYSTEM
-       ========================================= */
+    /* =========================
+       TASKS
+    ========================= */
 
-    let tasks =
-      JSON.parse(
-        localStorage.getItem("tasks") || "[]"
+    function getTasks() {
+
+      return JSON.parse(
+        localStorage.getItem("deevucoreTasks") || "[]"
       );
+    }
 
 
-    function saveTasks() {
+    function saveTasks(tasks) {
 
       localStorage.setItem(
-        "tasks",
+        "deevucoreTasks",
         JSON.stringify(tasks)
       );
-
     }
 
 
@@ -391,66 +541,63 @@
       const text =
         input.value.trim();
 
+      if (text === "") return;
 
-      if (text === "") {
-
-        return;
-
-      }
-
+      const tasks = getTasks();
 
       tasks.push({
-
+        id: Date.now(),
         text: text,
-
         completed: false
-
       });
 
+      saveTasks(tasks);
 
       input.value = "";
 
-
-      saveTasks();
-
       renderTasks();
-
+      updateProgress();
     }
 
 
     function handleTaskEnter(event) {
 
       if (event.key === "Enter") {
-
         addTask();
-
       }
-
     }
 
 
-    function toggleTask(index) {
+    function toggleTask(id) {
 
-      tasks[index].completed =
-        !tasks[index].completed;
+      const tasks = getTasks();
 
+      const task =
+        tasks.find(t => t.id === id);
 
-      saveTasks();
+      if (!task) return;
+
+      task.completed =
+        !task.completed;
+
+      saveTasks(tasks);
 
       renderTasks();
-
+      updateProgress();
     }
 
 
-    function deleteTask(index) {
+    function deleteTask(id) {
 
-      tasks.splice(index, 1);
+      let tasks = getTasks();
 
+      tasks =
+        tasks.filter(t => t.id !== id);
 
-      saveTasks();
+      saveTasks(tasks);
 
       renderTasks();
-
+      updateProgress();
     }
 
 
@@ -459,186 +606,192 @@
       const list =
         document.getElementById("taskList");
 
-
       list.innerHTML = "";
 
+      const tasks = getTasks();
 
-      tasks.forEach((task, index) => {
+      tasks.forEach(task => {
 
         const li =
           document.createElement("li");
 
+        if (task.completed) {
+          li.classList.add("completed");
+        }
 
-        const taskText =
+        const span =
           document.createElement("span");
 
+        span.className = "task-text";
 
-        taskText.className =
-          "task-text";
-
-
-        taskText.textContent =
-          (task.completed ? "✅ " : "⬜ ") +
+        span.textContent =
           task.text;
 
-
-        taskText.onclick =
-          function () {
-
-            toggleTask(index);
-
-          };
+        span.onclick = function () {
+          toggleTask(task.id);
+        };
 
 
         const deleteButton =
           document.createElement("button");
 
-
         deleteButton.className =
-          "delete";
-
+          "delete-btn";
 
         deleteButton.textContent =
-          "✕";
-
+          "🗑️";
 
         deleteButton.onclick =
           function () {
-
-            deleteTask(index);
-
+            deleteTask(task.id);
           };
 
 
-        li.appendChild(taskText);
-
+        li.appendChild(span);
         li.appendChild(deleteButton);
 
-
-        if (task.completed) {
-
-          li.classList.add("completed");
-
-        }
-
-
         list.appendChild(li);
-
       });
-
-
-      updateStats();
-
     }
 
 
-    /* =========================================
-       STATISTICS
-       ========================================= */
+    /* =========================
+       PROGRESS
+    ========================= */
 
-    function updateStats() {
+    function updateProgress() {
+
+      const tasks = getTasks();
+
+      const total =
+        tasks.length;
 
       const completed =
         tasks.filter(
           task => task.completed
         ).length;
 
+      let percentage = 0;
 
-      document.getElementById("completed")
-        .textContent =
+      if (total > 0) {
+        percentage =
+          Math.round(
+            (completed / total) * 100
+          );
+      }
+
+      document.getElementById(
+        "progressText"
+      ).textContent =
+        "Today's Progress " +
+        percentage + "%";
+
+      document.getElementById(
+        "progressFill"
+      ).style.width =
+        percentage + "%";
+
+      document.getElementById(
+        "completedCount"
+      ).textContent =
         completed;
 
-
-      document.getElementById("total")
-        .textContent =
-        tasks.length;
-
+      document.getElementById(
+        "totalCount"
+      ).textContent =
+        total;
     }
 
 
-    /* =========================================
-       STUDY PROGRESS
-       ========================================= */
+    /* =========================
+       STUDY
+    ========================= */
 
-    let progress =
-      Number(
-        localStorage.getItem("progress") || 0
-      );
+    function completeStudy() {
 
+      let completed =
+        Number(
+          localStorage.getItem(
+            "studyCompleted"
+          ) || 0
+        );
 
-    function updateProgress() {
-
-      document.getElementById("progress")
-        .style.width =
-        progress + "%";
-
-
-      document.getElementById("progressText")
-        .textContent =
-        progress + "%";
-
+      completed++;
 
       localStorage.setItem(
-        "progress",
-        progress
+        "studyCompleted",
+        completed
       );
 
+      updateStudy();
     }
 
 
-    function increaseProgress() {
+    function updateStudy() {
 
-      progress += 10;
+      const completed =
+        Number(
+          localStorage.getItem(
+            "studyCompleted"
+          ) || 0
+        );
 
-
-      if (progress > 100) {
-
-        progress = 100;
-
-      }
-
-
-      updateProgress();
-
+      document.getElementById(
+        "streakCount"
+      ).textContent =
+        completed > 0 ? 1 : 0;
     }
 
 
-    function resetProgress() {
+    /* =========================
+       RESET
+    ========================= */
 
-      progress = 0;
+    function resetToday() {
 
-      updateProgress();
+      const confirmReset =
+        confirm(
+          "Aaj ka pura progress reset karna hai?"
+        );
 
-    }
+      if (!confirmReset) return;
 
+      localStorage.removeItem(
+        "deevucoreGoal"
+      );
 
-    /* =========================================
-       LOAD DATA
-       ========================================= */
+      localStorage.removeItem(
+        "deevucoreTasks"
+      );
 
-    window.onload = function () {
+      localStorage.removeItem(
+        "studyCompleted"
+      );
 
-      const savedGoal =
-        localStorage.getItem("dailyGoal");
-
-
-      if (savedGoal) {
-
-        showGoal(savedGoal);
-
-      }
-
-
-      applyTheme();
-
+      displayGoal();
       renderTasks();
-
       updateProgress();
+      updateStudy();
+    }
 
-    };
+
+    /* =========================
+       START APP
+    ========================= */
+
+    checkDailyReset();
+
+    loadTheme();
+
+    displayGoal();
+
+    renderTasks();
+
+    updateProgress();
+
+    updateStudy();
 
   </script>
 
 </body>
-
 </html>
