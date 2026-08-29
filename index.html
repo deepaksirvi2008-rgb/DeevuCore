@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeevuCore</title>
+</head>
+
+<body>
+
+  <h1>⚡ DeevuCore</h1>
+  <p>My Personal Productivity Dashboard</p>
+
+  <hr>
+
+  <h2>🕒 Current Time</h2>
+  <div id="clock">Loading...</div>
+
+  <h2>🎯 Today's Goal</h2>
+  <input id="goalInput" type="text" placeholder="Enter your goal">
+  <button onclick="saveGoal()">Save Goal</button>
+  <p id="goal"></p>
+
+  <h2>📝 To-Do</h2>
+  <input id="taskInput" type="text" placeholder="Enter a task">
+  <button onclick="addTask()">Add Task</button>
+
+  <ul id="taskList"></ul>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      document.getElementById("clock").textContent =
+        now.toLocaleDateString() + " • " +
+        now.toLocaleTimeString();
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function saveGoal() {
+      const goal = document.getElementById("goalInput").value;
+
+      if (goal.trim() === "") return;
+
+      localStorage.setItem("dailyGoal", goal);
+      document.getElementById("goal").textContent = "🎯 " + goal;
+      document.getElementById("goalInput").value = "";
+    }
+
+    function addTask() {
+      const input = document.getElementById("taskInput");
+      const task = input.value.trim();
+
+      if (task === "") return;
+
+      const li = document.createElement("li");
+      li.textContent = task;
+
+      li.onclick = function () {
+        li.style.textDecoration =
+          li.style.textDecoration === "line-through"
+            ? "none"
+            : "line-through";
+      };
+
+      document.getElementById("taskList").appendChild(li);
+      input.value = "";
+    }
+
+    window.onload = function () {
+      const savedGoal = localStorage.getItem("dailyGoal");
+
+      if (savedGoal) {
+        document.getElementById("goal").textContent = "🎯 " + savedGoal;
+      }
+    };
+  </script>
+
+</body>
+</html>
