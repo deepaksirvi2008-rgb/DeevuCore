@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,35 +12,45 @@
 
 <body>
 
+  <!-- HEADER -->
   <header>
+
     <div class="top-bar">
+
       <div>
         <div class="brand">⚡ DeevuCore</div>
         <p>My Personal Productivity Dashboard</p>
       </div>
 
-      <button class="theme-btn" onclick="toggleTheme()" id="themeButton">
+      <button
+        class="theme-btn"
+        onclick="toggleTheme()"
+        id="themeButton"
+        aria-label="Toggle theme"
+      >
         ☀️
       </button>
+
     </div>
+
   </header>
 
 
   <main>
 
-    <!-- CLOCK -->
-
+    <!-- CURRENT TIME -->
     <section class="card">
+
       <h2>🕒 Current Time</h2>
 
       <div id="clock">
         Loading...
       </div>
+
     </section>
 
 
     <!-- DAILY GOAL -->
-
     <section class="card">
 
       <h2>🎯 Today's Goal</h2>
@@ -60,7 +71,6 @@
 
 
     <!-- TODO -->
-
     <section class="card">
 
       <h2>📝 To-Do List</h2>
@@ -86,16 +96,13 @@
 
 
     <!-- STUDY PROGRESS -->
-
     <section class="card">
 
       <h2>📚 Study Progress</h2>
 
       <div class="progress-info">
 
-        <span>
-          Today's Progress
-        </span>
+        <span>Today's Progress</span>
 
         <span id="progressText">
           0%
@@ -103,13 +110,11 @@
 
       </div>
 
-
       <div class="progress-bar">
 
         <div id="progress"></div>
 
       </div>
-
 
       <button onclick="increaseProgress()">
         + Complete Study
@@ -125,8 +130,7 @@
     </section>
 
 
-    <!-- STATS -->
-
+    <!-- STATISTICS -->
     <section class="card stats">
 
       <div>
@@ -189,26 +193,43 @@
 
   <script>
 
-    /* =====================================
-       DAILY DATA CHECK
-    ===================================== */
+    /* =========================================
+       LOCAL DATE
+       ========================================= */
 
-    const today =
-      new Date().toISOString().split("T")[0];
+    function getToday() {
+
+      const now = new Date();
+
+      const year = now.getFullYear();
+
+      const month =
+        String(now.getMonth() + 1).padStart(2, "0");
+
+      const day =
+        String(now.getDate()).padStart(2, "0");
+
+      return `${year}-${month}-${day}`;
+
+    }
+
+
+    /* =========================================
+       DAILY RESET
+       ========================================= */
+
+    const today = getToday();
 
     const savedDate =
       localStorage.getItem("devuDate");
 
 
-    /*
-      If the saved date is different,
-      start a fresh day.
-    */
-
     if (savedDate !== today) {
 
       localStorage.removeItem("dailyGoal");
+
       localStorage.removeItem("tasks");
+
       localStorage.removeItem("progress");
 
       localStorage.setItem(
@@ -219,9 +240,9 @@
     }
 
 
-    /* =====================================
+    /* =========================================
        CLOCK
-    ===================================== */
+       ========================================= */
 
     function updateClock() {
 
@@ -234,14 +255,15 @@
 
     }
 
+
     setInterval(updateClock, 1000);
 
     updateClock();
 
 
-    /* =====================================
-       THEME
-    ===================================== */
+    /* =========================================
+       THEME SYSTEM
+       ========================================= */
 
     let theme =
       localStorage.getItem("theme") || "dark";
@@ -249,19 +271,25 @@
 
     function applyTheme() {
 
+      const button =
+        document.getElementById("themeButton");
+
+
       if (theme === "light") {
 
         document.body.classList.add("light");
 
-        document.getElementById("themeButton")
-          .textContent = "🌙";
+        button.textContent = "🌙";
+
+        button.title = "Switch to Dark Mode";
 
       } else {
 
         document.body.classList.remove("light");
 
-        document.getElementById("themeButton")
-          .textContent = "☀️";
+        button.textContent = "☀️";
+
+        button.title = "Switch to Light Mode";
 
       }
 
@@ -270,24 +298,31 @@
 
     function toggleTheme() {
 
-      theme =
-        theme === "dark"
-          ? "light"
-          : "dark";
+      if (theme === "dark") {
+
+        theme = "light";
+
+      } else {
+
+        theme = "dark";
+
+      }
+
 
       localStorage.setItem(
         "theme",
         theme
       );
 
+
       applyTheme();
 
     }
 
 
-    /* =====================================
-       GOAL
-    ===================================== */
+    /* =========================================
+       DAILY GOAL
+       ========================================= */
 
     function saveGoal() {
 
@@ -297,14 +332,22 @@
       const goal =
         input.value.trim();
 
-      if (!goal) return;
+
+      if (goal === "") {
+
+        return;
+
+      }
+
 
       localStorage.setItem(
         "dailyGoal",
         goal
       );
 
+
       showGoal(goal);
+
 
       input.value = "";
 
@@ -320,9 +363,9 @@
     }
 
 
-    /* =====================================
+    /* =========================================
        TASK SYSTEM
-    ===================================== */
+       ========================================= */
 
     let tasks =
       JSON.parse(
@@ -348,7 +391,12 @@
       const text =
         input.value.trim();
 
-      if (!text) return;
+
+      if (text === "") {
+
+        return;
+
+      }
 
 
       tasks.push({
@@ -361,6 +409,7 @@
 
 
       input.value = "";
+
 
       saveTasks();
 
@@ -385,6 +434,7 @@
       tasks[index].completed =
         !tasks[index].completed;
 
+
       saveTasks();
 
       renderTasks();
@@ -395,6 +445,7 @@
     function deleteTask(index) {
 
       tasks.splice(index, 1);
+
 
       saveTasks();
 
@@ -408,6 +459,7 @@
       const list =
         document.getElementById("taskList");
 
+
       list.innerHTML = "";
 
 
@@ -417,27 +469,50 @@
           document.createElement("li");
 
 
-        li.innerHTML = `
+        const taskText =
+          document.createElement("span");
 
-          <span
-            class="task-text"
-            onclick="toggleTask(${index})"
-          >
 
-            ${task.completed ? "✅" : "⬜"}
+        taskText.className =
+          "task-text";
 
-            ${escapeHTML(task.text)}
 
-          </span>
+        taskText.textContent =
+          (task.completed ? "✅ " : "⬜ ") +
+          task.text;
 
-          <button
-            class="delete"
-            onclick="deleteTask(${index})"
-          >
-            ✕
-          </button>
 
-        `;
+        taskText.onclick =
+          function () {
+
+            toggleTask(index);
+
+          };
+
+
+        const deleteButton =
+          document.createElement("button");
+
+
+        deleteButton.className =
+          "delete";
+
+
+        deleteButton.textContent =
+          "✕";
+
+
+        deleteButton.onclick =
+          function () {
+
+            deleteTask(index);
+
+          };
+
+
+        li.appendChild(taskText);
+
+        li.appendChild(deleteButton);
 
 
         if (task.completed) {
@@ -457,26 +532,9 @@
     }
 
 
-    /*
-      Prevent HTML entered as a task
-      from becoming actual HTML.
-    */
-
-    function escapeHTML(text) {
-
-      const div =
-        document.createElement("div");
-
-      div.textContent = text;
-
-      return div.innerHTML;
-
-    }
-
-
-    /* =====================================
-       STATS
-    ===================================== */
+    /* =========================================
+       STATISTICS
+       ========================================= */
 
     function updateStats() {
 
@@ -498,9 +556,9 @@
     }
 
 
-    /* =====================================
+    /* =========================================
        STUDY PROGRESS
-    ===================================== */
+       ========================================= */
 
     let progress =
       Number(
@@ -554,11 +612,11 @@
     }
 
 
-    /* =====================================
-       LOAD EVERYTHING
-    ===================================== */
+    /* =========================================
+       LOAD DATA
+       ========================================= */
 
-    window.onload = function() {
+    window.onload = function () {
 
       const savedGoal =
         localStorage.getItem("dailyGoal");
@@ -579,8 +637,8 @@
 
     };
 
-
   </script>
 
 </body>
+
 </html>
