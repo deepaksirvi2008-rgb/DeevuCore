@@ -3,164 +3,340 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>DeevuCore</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
   <header>
-    <div class="brand">⚡ DeevuCore</div>
-    <p>My Personal Productivity Dashboard</p>
+    <div class="top-bar">
+      <div>
+        <div class="brand">⚡ DeevuCore</div>
+        <p>My Personal Productivity Dashboard</p>
+      </div>
+
+      <button class="theme-btn" onclick="toggleTheme()" id="themeButton">
+        ☀️
+      </button>
+    </div>
   </header>
+
 
   <main>
 
+    <!-- CLOCK -->
+
     <section class="card">
       <h2>🕒 Current Time</h2>
-      <div id="clock">Loading...</div>
+
+      <div id="clock">
+        Loading...
+      </div>
     </section>
 
+
+    <!-- DAILY GOAL -->
+
     <section class="card">
+
       <h2>🎯 Today's Goal</h2>
 
-      <input id="goalInput" type="text" placeholder="What is your main goal today?">
-      <button onclick="saveGoal()">Save Goal</button>
+      <input
+        id="goalInput"
+        type="text"
+        placeholder="What is your main goal today?"
+      >
+
+      <button onclick="saveGoal()">
+        Save Goal
+      </button>
 
       <div id="goal"></div>
+
     </section>
 
+
+    <!-- TODO -->
+
     <section class="card">
+
       <h2>📝 To-Do List</h2>
 
       <div class="input-row">
-        <input id="taskInput" type="text" placeholder="Add a task...">
-        <button onclick="addTask()">Add</button>
+
+        <input
+          id="taskInput"
+          type="text"
+          placeholder="Add a task..."
+          onkeydown="handleTaskEnter(event)"
+        >
+
+        <button onclick="addTask()">
+          Add
+        </button>
+
       </div>
 
       <ul id="taskList"></ul>
+
     </section>
 
+
+    <!-- STUDY PROGRESS -->
+
     <section class="card">
+
       <h2>📚 Study Progress</h2>
 
       <div class="progress-info">
-        <span>Today's Progress</span>
-        <span id="progressText">0%</span>
+
+        <span>
+          Today's Progress
+        </span>
+
+        <span id="progressText">
+          0%
+        </span>
+
       </div>
+
 
       <div class="progress-bar">
+
         <div id="progress"></div>
+
       </div>
 
-      <button onclick="increaseProgress()">+ Complete Study</button>
-      <button onclick="resetProgress()">Reset</button>
+
+      <button onclick="increaseProgress()">
+        + Complete Study
+      </button>
+
+      <button
+        class="secondary-btn"
+        onclick="resetProgress()"
+      >
+        Reset
+      </button>
+
     </section>
 
+
+    <!-- STATS -->
+
     <section class="card stats">
+
       <div>
+
         <span>✅</span>
-        <strong id="completed">0</strong>
-        <small>Completed</small>
+
+        <strong id="completed">
+          0
+        </strong>
+
+        <small>
+          Completed
+        </small>
+
       </div>
 
+
       <div>
+
         <span>📋</span>
-        <strong id="total">0</strong>
-        <small>Total Tasks</small>
+
+        <strong id="total">
+          0
+        </strong>
+
+        <small>
+          Total Tasks
+        </small>
+
       </div>
 
+
       <div>
+
         <span>🔥</span>
-        <strong>1</strong>
-        <small>Day Streak</small>
+
+        <strong id="streak">
+          1
+        </strong>
+
+        <small>
+          Day Streak
+        </small>
+
       </div>
+
     </section>
 
   </main>
 
+
   <footer>
-    <p>Built with ❤️ by Deevu</p>
+
+    <p>
+      Built with ❤️ by Deevu
+    </p>
+
   </footer>
 
 
   <script>
 
-    /* CLOCK */
+    /* =====================================
+       DAILY DATA CHECK
+    ===================================== */
+
+    const today =
+      new Date().toISOString().split("T")[0];
+
+    const savedDate =
+      localStorage.getItem("devuDate");
+
+
+    /*
+      If the saved date is different,
+      start a fresh day.
+    */
+
+    if (savedDate !== today) {
+
+      localStorage.removeItem("dailyGoal");
+      localStorage.removeItem("tasks");
+      localStorage.removeItem("progress");
+
+      localStorage.setItem(
+        "devuDate",
+        today
+      );
+
+    }
+
+
+    /* =====================================
+       CLOCK
+    ===================================== */
 
     function updateClock() {
+
       const now = new Date();
 
       document.getElementById("clock").textContent =
         now.toLocaleDateString() +
         " • " +
         now.toLocaleTimeString();
+
     }
 
     setInterval(updateClock, 1000);
+
     updateClock();
 
 
-    /* GOAL */
+    /* =====================================
+       THEME
+    ===================================== */
 
-    function saveGoal() {
+    let theme =
+      localStorage.getItem("theme") || "dark";
 
-      const input = document.getElementById("goalInput");
-      const goal = input.value.trim();
 
-      if (!goal) return;
+    function applyTheme() {
 
-      localStorage.setItem("dailyGoal", goal);
+      if (theme === "light") {
 
-      document.getElementById("goal").textContent =
-        "🎯 " + goal;
+        document.body.classList.add("light");
 
-      input.value = "";
+        document.getElementById("themeButton")
+          .textContent = "🌙";
+
+      } else {
+
+        document.body.classList.remove("light");
+
+        document.getElementById("themeButton")
+          .textContent = "☀️";
+
+      }
+
     }
 
 
-    /* TASKS */
+    function toggleTheme() {
 
-    let tasks = JSON.parse(
-      localStorage.getItem("tasks") || "[]"
-    );
+      theme =
+        theme === "dark"
+          ? "light"
+          : "dark";
+
+      localStorage.setItem(
+        "theme",
+        theme
+      );
+
+      applyTheme();
+
+    }
+
+
+    /* =====================================
+       GOAL
+    ===================================== */
+
+    function saveGoal() {
+
+      const input =
+        document.getElementById("goalInput");
+
+      const goal =
+        input.value.trim();
+
+      if (!goal) return;
+
+      localStorage.setItem(
+        "dailyGoal",
+        goal
+      );
+
+      showGoal(goal);
+
+      input.value = "";
+
+    }
+
+
+    function showGoal(goal) {
+
+      document.getElementById("goal")
+        .textContent =
+        "🎯 " + goal;
+
+    }
+
+
+    /* =====================================
+       TASK SYSTEM
+    ===================================== */
+
+    let tasks =
+      JSON.parse(
+        localStorage.getItem("tasks") || "[]"
+      );
+
 
     function saveTasks() {
+
       localStorage.setItem(
         "tasks",
         JSON.stringify(tasks)
       );
-    }
 
-    function renderTasks() {
-
-      const list = document.getElementById("taskList");
-
-      list.innerHTML = "";
-
-      tasks.forEach((task, index) => {
-
-        const li = document.createElement("li");
-
-        li.className =
-          task.completed ? "completed" : "";
-
-        li.innerHTML = `
-          <span onclick="toggleTask(${index})">
-            ${task.completed ? "✅" : "⬜"} ${task.text}
-          </span>
-
-          <button class="delete"
-            onclick="deleteTask(${index})">
-            ✕
-          </button>
-        `;
-
-        list.appendChild(li);
-
-      });
-
-      updateStats();
     }
 
 
@@ -169,19 +345,38 @@
       const input =
         document.getElementById("taskInput");
 
-      const text = input.value.trim();
+      const text =
+        input.value.trim();
 
       if (!text) return;
 
+
       tasks.push({
+
         text: text,
+
         completed: false
+
       });
+
 
       input.value = "";
 
       saveTasks();
+
       renderTasks();
+
+    }
+
+
+    function handleTaskEnter(event) {
+
+      if (event.key === "Enter") {
+
+        addTask();
+
+      }
+
     }
 
 
@@ -191,7 +386,9 @@
         !tasks[index].completed;
 
       saveTasks();
+
       renderTasks();
+
     }
 
 
@@ -200,41 +397,134 @@
       tasks.splice(index, 1);
 
       saveTasks();
+
       renderTasks();
+
     }
 
+
+    function renderTasks() {
+
+      const list =
+        document.getElementById("taskList");
+
+      list.innerHTML = "";
+
+
+      tasks.forEach((task, index) => {
+
+        const li =
+          document.createElement("li");
+
+
+        li.innerHTML = `
+
+          <span
+            class="task-text"
+            onclick="toggleTask(${index})"
+          >
+
+            ${task.completed ? "✅" : "⬜"}
+
+            ${escapeHTML(task.text)}
+
+          </span>
+
+          <button
+            class="delete"
+            onclick="deleteTask(${index})"
+          >
+            ✕
+          </button>
+
+        `;
+
+
+        if (task.completed) {
+
+          li.classList.add("completed");
+
+        }
+
+
+        list.appendChild(li);
+
+      });
+
+
+      updateStats();
+
+    }
+
+
+    /*
+      Prevent HTML entered as a task
+      from becoming actual HTML.
+    */
+
+    function escapeHTML(text) {
+
+      const div =
+        document.createElement("div");
+
+      div.textContent = text;
+
+      return div.innerHTML;
+
+    }
+
+
+    /* =====================================
+       STATS
+    ===================================== */
 
     function updateStats() {
 
       const completed =
-        tasks.filter(task => task.completed).length;
+        tasks.filter(
+          task => task.completed
+        ).length;
+
 
       document.getElementById("completed")
-        .textContent = completed;
+        .textContent =
+        completed;
+
 
       document.getElementById("total")
-        .textContent = tasks.length;
+        .textContent =
+        tasks.length;
+
     }
 
 
-    /* STUDY PROGRESS */
+    /* =====================================
+       STUDY PROGRESS
+    ===================================== */
 
     let progress =
-      Number(localStorage.getItem("progress") || 0);
+      Number(
+        localStorage.getItem("progress") || 0
+      );
 
 
     function updateProgress() {
 
       document.getElementById("progress")
-        .style.width = progress + "%";
+        .style.width =
+        progress + "%";
+
 
       document.getElementById("progressText")
-        .textContent = progress + "%";
+        .textContent =
+        progress + "%";
+
 
       localStorage.setItem(
         "progress",
         progress
       );
+
     }
 
 
@@ -242,10 +532,16 @@
 
       progress += 10;
 
-      if (progress > 100)
+
+      if (progress > 100) {
+
         progress = 100;
 
+      }
+
+
       updateProgress();
+
     }
 
 
@@ -254,24 +550,35 @@
       progress = 0;
 
       updateProgress();
+
     }
 
 
-    /* LOAD DATA */
+    /* =====================================
+       LOAD EVERYTHING
+    ===================================== */
 
     window.onload = function() {
 
       const savedGoal =
         localStorage.getItem("dailyGoal");
 
+
       if (savedGoal) {
-        document.getElementById("goal")
-          .textContent = "🎯 " + savedGoal;
+
+        showGoal(savedGoal);
+
       }
 
+
+      applyTheme();
+
       renderTasks();
+
       updateProgress();
+
     };
+
 
   </script>
 
