@@ -6,57 +6,153 @@
 <meta name="theme-color" content="#0f172a">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" href="icon.png">
-<title>DeevuCore V2.2</title>
+<title>DeevuCore V2.3.1</title>
+
 <style>
 *{box-sizing:border-box}
-:root{--bg:#0f172a;--card:#1e293b;--card2:#27364a;--text:#f8fafc;--muted:#94a3b8;--accent:#38bdf8;--green:#22c55e;--red:#ef4444;--yellow:#f59e0b}
-body.light{--bg:#f1f5f9;--card:#fff;--card2:#e2e8f0;--text:#0f172a;--muted:#64748b}
-body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif}
+:root{
+--bg:#0f172a;--card:#1e293b;--card2:#27364a;
+--text:#f8fafc;--muted:#94a3b8;--accent:#38bdf8;
+--green:#22c55e;--red:#ef4444;--yellow:#f59e0b;
+}
+body.light{
+--bg:#f1f5f9;--card:#fff;--card2:#e2e8f0;
+--text:#0f172a;--muted:#64748b;
+}
+body{
+margin:0;background:var(--bg);color:var(--text);
+font-family:system-ui,sans-serif;
+}
 .app{max-width:950px;margin:auto;padding:16px}
-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.logo{font-size:25px;font-weight:800}.sub,.small{color:var(--muted);font-size:12px}
-button{border:0;border-radius:10px;padding:9px 12px;background:var(--card2);color:var(--text);font-weight:600;cursor:pointer}
+header{
+display:flex;justify-content:space-between;align-items:center;
+margin-bottom:18px
+}
+.logo{font-size:25px;font-weight:800}
+.sub,.small{color:var(--muted);font-size:12px}
+button{
+border:0;border-radius:10px;padding:9px 12px;
+background:var(--card2);color:var(--text);
+font-weight:600;cursor:pointer
+}
+button:active{transform:scale(.97)}
 .primary{background:var(--accent);color:#082f49}
-.danger{background:var(--red);color:#fff}
-.hero{padding:22px;border-radius:20px;margin-bottom:15px;background:linear-gradient(135deg,#0ea5e9,#2563eb)}
-.hero h1{margin:0 0 5px;font-size:25px}.time{margin-top:12px;font-size:13px}
+.danger{background:var(--red);color:white}
+.hero{
+padding:22px;border-radius:20px;margin-bottom:15px;
+background:linear-gradient(135deg,#0ea5e9,#2563eb)
+}
+.hero h1{margin:0 0 5px;font-size:25px}
+.time{margin-top:12px;font-size:13px}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.card{background:var(--card);padding:17px;border-radius:18px;box-shadow:0 5px 18px #0002}
-.full{grid-column:1/-1}.card h2{font-size:17px;margin:0 0 13px}
-.row{display:flex;gap:8px}input,select{width:100%;padding:11px;border:0;border-radius:10px;background:var(--card2);color:var(--text);outline:none}
+.card{
+background:var(--card);padding:17px;border-radius:18px;
+box-shadow:0 5px 18px #0002
+}
+.full{grid-column:1/-1}
+.card h2{font-size:17px;margin:0 0 13px}
+.row{display:flex;gap:8px}
+input,select{
+width:100%;padding:11px;border:0;border-radius:10px;
+background:var(--card2);color:var(--text);outline:none
+}
 .goal{font-size:18px;font-weight:700;color:var(--accent);margin:8px 0}
 .goal.done{text-decoration:line-through;color:var(--green)}
 .goal-actions{display:flex;gap:7px;margin-bottom:10px}
 .task{padding:12px 0;border-bottom:1px solid #ffffff14}
-.task:last-child{border:0}.tasktop{display:flex;align-items:center;gap:9px}
-.check{width:22px;height:22px;border:2px solid var(--muted);border-radius:7px;display:flex;align-items:center;justify-content:center;flex:none}
+.task:last-child{border:0}
+.tasktop{display:flex;align-items:center;gap:9px}
+.check{
+width:22px;height:22px;border:2px solid var(--muted);
+border-radius:7px;display:flex;align-items:center;
+justify-content:center;flex:none
+}
 .task.done .check{background:var(--green);border-color:var(--green)}
 .task.done .tasktext{text-decoration:line-through;color:var(--muted)}
 .tasktext{flex:1;word-break:break-word}
-.actions{display:flex;gap:5px}.actions button{padding:6px 9px}
-.badge{font-size:10px;padding:4px 7px;border-radius:8px;font-weight:700}
-.high{background:#ef444433;color:#f87171}.medium{background:#f59e0b33;color:#fbbf24}.low{background:#22c55e33;color:#4ade80}
-.meta{margin-left:31px;margin-top:6px;display:flex;gap:8px;flex-wrap:wrap}
+.actions{display:flex;gap:5px}
+.actions button{padding:6px 9px}
+.badge{
+font-size:10px;padding:4px 7px;border-radius:8px;font-weight:700
+}
+.high{background:#ef444433;color:#f87171}
+.medium{background:#f59e0b33;color:#fbbf24}
+.low{background:#22c55e33;color:#4ade80}
+.meta{
+margin-left:31px;margin-top:6px;display:flex;
+gap:8px;flex-wrap:wrap
+}
 .filters{display:flex;gap:6px;margin:12px 0;flex-wrap:wrap}
 .filters button.active{background:var(--accent);color:#082f49}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.stat{text-align:center;background:var(--card2);padding:12px;border-radius:13px}
+.stat{
+text-align:center;background:var(--card2);
+padding:12px;border-radius:13px
+}
 .stat b{display:block;font-size:21px}
-.progress{height:11px;background:var(--card2);border-radius:20px;overflow:hidden;margin:12px 0}
-.fill{height:100%;width:0;background:var(--green);transition:.3s}
+.progress{
+height:11px;background:var(--card2);
+border-radius:20px;overflow:hidden;margin:12px 0
+}
+.fill{
+height:100%;width:0;background:var(--green);
+transition:.3s
+}
 .percent{text-align:right;color:var(--muted);font-size:12px}
 .empty{text-align:center;padding:14px;color:var(--muted)}
-.timer{text-align:center;font-size:42px;font-weight:800;margin:8px}
-.timer-controls{display:flex;justify-content:center;gap:7px}
-footer{text-align:center;color:var(--muted);font-size:11px;padding:22px}
-@media(max-width:650px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.stats{grid-template-columns:repeat(2,1fr)}}
+
+.timer-card{text-align:center}
+.mode{
+display:inline-block;padding:6px 12px;border-radius:20px;
+background:var(--card2);font-size:12px;font-weight:700
+}
+.timer{
+font-size:58px;font-weight:800;
+letter-spacing:2px;margin:15px 0
+}
+.timer-controls{
+display:flex;justify-content:center;gap:7px;flex-wrap:wrap
+}
+.mode-controls{
+display:flex;justify-content:center;gap:7px;
+margin-top:12px;flex-wrap:wrap
+}
+.mode-controls button.active{
+background:var(--accent);color:#082f49
+}
+.focus-stats{
+display:grid;grid-template-columns:repeat(2,1fr);
+gap:10px;margin-top:16px
+}
+.focus-stat{
+background:var(--card2);padding:12px;border-radius:13px
+}
+.focus-stat b{display:block;font-size:23px}
+.session-msg{
+margin-top:12px;color:var(--muted);font-size:12px;
+min-height:18px
+}
+footer{
+text-align:center;color:var(--muted);
+font-size:11px;padding:22px
+}
+@media(max-width:650px){
+.grid{grid-template-columns:1fr}
+.full{grid-column:auto}
+.stats{grid-template-columns:repeat(2,1fr)}
+.timer{font-size:46px}
+}
 </style>
 </head>
 
 <body>
 <div class="app">
+
 <header>
-<div><div class="logo">⚡ DeevuCore</div><div class="sub">Personal Command Center • V2.2</div></div>
+<div>
+<div class="logo">⚡ DeevuCore</div>
+<div class="sub">Personal Command Center • V2.3.1</div>
+</div>
 <button id="theme">☀️</button>
 </header>
 
@@ -104,13 +200,18 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:22px}
 
 <section class="card">
 <h2>📊 Today's Progress</h2>
-<div class="progress"><div id="fill" class="fill"></div></div>
+<div class="progress">
+<div id="fill" class="fill"></div>
+</div>
 <div id="percent" class="percent">0%</div>
 </section>
 
 <section class="card">
 <h2>🔥 Streak</h2>
-<div class="stat"><b id="streak">0</b><span class="small">days</span></div>
+<div class="stat">
+<b id="streak">0</b>
+<span class="small">days</span>
+</div>
 </section>
 
 <section class="card full">
@@ -123,36 +224,78 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:22px}
 </div>
 </section>
 
-<section class="card full">
-<h2>⏱️ Focus Timer</h2>
+<section class="card full timer-card">
+<h2>⏱️ Focus System</h2>
+
+<div id="modeLabel" class="mode">FOCUS</div>
+
 <div id="timer" class="timer">25:00</div>
+
 <div class="timer-controls">
 <button onclick="startTimer()">▶ Start</button>
 <button onclick="pauseTimer()">⏸ Pause</button>
 <button onclick="resetTimer()">↻ Reset</button>
 </div>
+
+<div class="mode-controls">
+<button id="focusBtn" class="active" onclick="setMode('focus')">
+🎯 Focus 25m
+</button>
+<button id="shortBtn" onclick="setMode('short')">
+☕ Short 5m
+</button>
+<button id="longBtn" onclick="setMode('long')">
+🌙 Long 15m
+</button>
+</div>
+
+<div class="focus-stats">
+<div class="focus-stat">
+<b id="sessions">0</b>
+<span class="small">Focus Sessions Today</span>
+</div>
+<div class="focus-stat">
+<b id="focusMinutes">0</b>
+<span class="small">Focus Minutes Today</span>
+</div>
+</div>
+
+<div id="sessionMsg" class="session-msg">
+Ready for your first focus session.
+</div>
 </section>
 
 </div>
-<footer>DeevuCore V2.2 • Build your day, one task at a time 🚀</footer>
+
+<footer>
+DeevuCore V2.3.1 • Focus on what matters 🚀
+</footer>
+
 </div>
 
 <script>
-const KEY="deevucore_v22";
-const oldKey="deevucore_v21";
+const KEY="deevucore_v23";
+const oldKey="deevucore_v22";
 
 function dateKey(d=new Date()){
-return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+return d.getFullYear()+"-"+
+String(d.getMonth()+1).padStart(2,"0")+"-"+
+String(d.getDate()).padStart(2,"0");
 }
 
-let data=JSON.parse(localStorage.getItem(KEY)||"null");
 let old=JSON.parse(localStorage.getItem(oldKey)||"null");
+let data=JSON.parse(localStorage.getItem(KEY)||"null");
 
 if(!data){
 data={
-date:dateKey(),goal:old?.goal||"",goalDone:false,
-tasks:(old?.tasks||[]).map(t=>({id:t.id,text:t.text,done:!!(t.done??t.completed),priority:"medium",due:""})),
-streak:old?.streak||0,lastCompleted:old?.lastCompleted||""
+date:dateKey(),
+goal:old?.goal||"",
+goalDone:old?.goalDone||false,
+tasks:old?.tasks||[],
+streak:old?.streak||0,
+lastCompleted:old?.lastCompleted||"",
+focusSessions:0,
+focusMinutes:0
 };
 save();
 }
@@ -162,57 +305,92 @@ data.date=dateKey();
 data.goal="";
 data.goalDone=false;
 data.tasks=[];
+data.focusSessions=0;
+data.focusMinutes=0;
 save();
 }
 
-function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function save(){
+localStorage.setItem(KEY,JSON.stringify(data));
+}
 
 function renderGoal(){
 const a=document.getElementById("goalArea");
+
 if(!data.goal){
-a.innerHTML='<div class="row"><input id="goalInput" placeholder="Set your main goal for today"><button class="primary" onclick="saveGoal()">Save</button></div>';
+a.innerHTML=
+'<div class="row">'+
+'<input id="goalInput" placeholder="Set your main goal for today">'+
+'<button class="primary" onclick="saveGoal()">Save</button>'+
+'</div>';
 return;
 }
+
 a.innerHTML=
-'<div class="goal '+(data.goalDone?"done":"")+'">'+escapeHTML(data.goal)+'</div>'+
+'<div class="goal '+(data.goalDone?"done":"")+'">'+
+escapeHTML(data.goal)+
+'</div>'+
 '<div class="goal-actions">'+
-'<button onclick="toggleGoal()">'+(data.goalDone?"↩️ Undo":"✅ Complete")+'</button>'+
+'<button onclick="toggleGoal()">'+
+(data.goalDone?"↩️ Undo":"✅ Complete")+
+'</button>'+
 '<button onclick="editGoal()">✏️ Edit</button>'+
-'<button class="danger" onclick="clearGoal()">🗑️ Clear</button></div>';
+'<button class="danger" onclick="clearGoal()">🗑️ Clear</button>'+
+'</div>';
 }
 
 function saveGoal(){
 const x=document.getElementById("goalInput").value.trim();
 if(!x)return;
-data.goal=x;data.goalDone=false;save();render();
+data.goal=x;
+data.goalDone=false;
+save();
+render();
 }
 
 function editGoal(){
 const x=prompt("Edit today's goal:",data.goal);
-if(x!==null&&x.trim()){data.goal=x.trim();data.goalDone=false;save();render()}
+if(x!==null&&x.trim()){
+data.goal=x.trim();
+data.goalDone=false;
+save();
+render();
+}
 }
 
 function clearGoal(){
-if(confirm("Clear today's goal?")){data.goal="";data.goalDone=false;save();render()}
+if(confirm("Clear today's goal?")){
+data.goal="";
+data.goalDone=false;
+save();
+render();
+}
 }
 
 function toggleGoal(){
 data.goalDone=!data.goalDone;
-save();render();
+save();
+render();
 }
 
 function addTask(){
 const input=document.getElementById("taskInput");
 const text=input.value.trim();
+
 if(!text)return;
+
 data.tasks.push({
-id:Date.now(),text:text,done:false,
+id:Date.now(),
+text:text,
+done:false,
 priority:document.getElementById("priority").value,
 due:document.getElementById("dueDate").value
 });
+
 input.value="";
 document.getElementById("dueDate").value="";
-save();render();
+save();
+render();
 }
 
 document.getElementById("taskInput").addEventListener("keydown",e=>{
@@ -223,7 +401,10 @@ let currentFilter="all";
 
 function filterTasks(f,btn){
 currentFilter=f;
-document.querySelectorAll(".filters button").forEach(x=>x.classList.remove("active"));
+
+document.querySelectorAll(".filters button")
+.forEach(x=>x.classList.remove("active"));
+
 btn.classList.add("active");
 renderTasks();
 }
@@ -231,51 +412,87 @@ renderTasks();
 function editTask(id){
 const t=data.tasks.find(x=>x.id===id);
 if(!t)return;
+
 const text=prompt("Edit task:",t.text);
+
 if(text===null||!text.trim())return;
+
 t.text=text.trim();
 
-const p=prompt("Priority: high / medium / low",t.priority);
-if(p&&["high","medium","low"].includes(p.toLowerCase()))t.priority=p.toLowerCase();
+const p=prompt(
+"Priority: high / medium / low",
+t.priority
+);
 
-save();render();
+if(p&&["high","medium","low"].includes(p.toLowerCase())){
+t.priority=p.toLowerCase();
+}
+
+const due=prompt(
+"Due date (YYYY-MM-DD), leave blank to remove:",
+t.due||""
+);
+
+if(due!==null)t.due=due.trim();
+
+save();
+render();
 }
 
 function deleteTask(id){
 if(confirm("Delete this task?")){
 data.tasks=data.tasks.filter(x=>x.id!==id);
-save();render();
+save();
+render();
 }
 }
 
 function toggleTask(id){
 const t=data.tasks.find(x=>x.id===id);
 if(!t)return;
+
 const was=t.done;
 t.done=!t.done;
 
 if(!was&&t.done){
 const y=new Date();
 y.setDate(y.getDate()-1);
+
 const yesterday=dateKey(y);
+
 if(data.lastCompleted!==dateKey()){
-data.streak=data.lastCompleted===yesterday?data.streak+1:1;
+data.streak=
+data.lastCompleted===yesterday?
+data.streak+1:1;
+
 data.lastCompleted=dateKey();
 }
 }
-save();render();
+
+save();
+render();
 }
 
 function renderTasks(){
 const box=document.getElementById("tasks");
+
 let list=[...data.tasks];
 
-if(currentFilter==="pending")list=list.filter(t=>!t.done);
-if(currentFilter==="completed")list=list.filter(t=>t.done);
-if(["high","medium","low"].includes(currentFilter))list=list.filter(t=>t.priority===currentFilter);
+if(currentFilter==="pending")
+list=list.filter(t=>!t.done);
+
+if(currentFilter==="completed")
+list=list.filter(t=>t.done);
+
+if(["high","medium","low"].includes(currentFilter))
+list=list.filter(t=>t.priority===currentFilter);
 
 const order={high:0,medium:1,low:2};
-list.sort((a,b)=>(a.done-b.done)||((order[a.priority]??1)-(order[b.priority]??1)));
+
+list.sort((a,b)=>
+(a.done-b.done)||
+((order[a.priority]??1)-(order[b.priority]??1))
+);
 
 if(!list.length){
 box.innerHTML='<div class="empty">No tasks here 🎯</div>';
@@ -283,6 +500,7 @@ return;
 }
 
 box.innerHTML="";
+
 list.forEach(t=>{
 const d=document.createElement("div");
 d.className="task"+(t.done?" done":"");
@@ -315,11 +533,15 @@ del.textContent="×";
 del.onclick=()=>deleteTask(t.id);
 
 actions.append(edit,del);
+
 top.append(check,text,badge,actions);
 
 const meta=document.createElement("div");
 meta.className="meta";
-if(t.due)meta.innerHTML="📅 "+t.due;
+
+if(t.due){
+meta.textContent="📅 "+t.due;
+}
 
 d.append(top,meta);
 box.appendChild(d);
@@ -331,6 +553,7 @@ const total=data.tasks.length;
 const done=data.tasks.filter(t=>t.done).length;
 const pending=total-done;
 const rate=total?Math.round(done/total*100):0;
+
 document.getElementById("total").textContent=total;
 document.getElementById("completed").textContent=done;
 document.getElementById("pending").textContent=pending;
@@ -338,10 +561,14 @@ document.getElementById("rate").textContent=rate+"%";
 document.getElementById("fill").style.width=rate+"%";
 document.getElementById("percent").textContent=rate+"%";
 document.getElementById("streak").textContent=data.streak;
+document.getElementById("sessions").textContent=data.focusSessions;
+document.getElementById("focusMinutes").textContent=data.focusMinutes;
 }
 
 function render(){
-renderGoal();renderTasks();renderStats();
+renderGoal();
+renderTasks();
+renderStats();
 }
 
 function escapeHTML(s){
@@ -352,47 +579,167 @@ return div.innerHTML;
 
 function updateClock(){
 const n=new Date();
+
 document.getElementById("clock").textContent=
-n.toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"})+
-" • "+n.toLocaleTimeString("en-IN");
+n.toLocaleDateString("en-IN",{
+weekday:"long",
+day:"numeric",
+month:"long"
+})+
+" • "+
+n.toLocaleTimeString("en-IN");
 }
+
 setInterval(updateClock,1000);
 updateClock();
 
 const savedTheme=localStorage.getItem("deevucoreTheme");
-if(savedTheme==="light")document.body.classList.add("light");
+
+if(savedTheme==="light")
+document.body.classList.add("light");
 
 document.getElementById("theme").onclick=()=>{
 document.body.classList.toggle("light");
-localStorage.setItem("deevucoreTheme",document.body.classList.contains("light")?"light":"dark");
+
+localStorage.setItem(
+"deevucoreTheme",
+document.body.classList.contains("light")?
+"light":"dark"
+);
 };
 
-let seconds=1500,timerInterval=null;
+/* FOCUS ENGINE */
+
+const modes={
+focus:1500,
+short:300,
+long:900
+};
+
+let mode="focus";
+let seconds=modes.focus;
+let timerInterval=null;
+
+function updateModeUI(){
+const labels={
+focus:"FOCUS",
+short:"SHORT BREAK",
+long:"LONG BREAK"
+};
+
+document.getElementById("modeLabel").textContent=labels[mode];
+
+document.getElementById("focusBtn").classList.toggle(
+"active",mode==="focus"
+);
+
+document.getElementById("shortBtn").classList.toggle(
+"active",mode==="short"
+);
+
+document.getElementById("longBtn").classList.toggle(
+"active",mode==="long"
+);
+}
 
 function showTimer(){
+const m=Math.floor(seconds/60)
+.toString().padStart(2,"0");
+
+const s=(seconds%60)
+.toString().padStart(2,"0");
+
 document.getElementById("timer").textContent=
-String(Math.floor(seconds/60)).padStart(2,"0")+":"+
-String(seconds%60).padStart(2,"0");
+m+":"+s;
+}
+
+function setMode(newMode){
+pauseTimer();
+mode=newMode;
+seconds=modes[mode];
+updateModeUI();
+showTimer();
+
+const messages={
+focus:"Ready for a focused session.",
+short:"Take a short break.",
+long:"Take a longer break and recharge."
+};
+
+document.getElementById("sessionMsg").textContent=
+messages[mode];
 }
 
 function startTimer(){
 if(timerInterval)return;
+
+document.getElementById("sessionMsg").textContent=
+mode==="focus"?
+"Focus mode running... stay on task 💪":
+"Break running... recharge ☕";
+
 timerInterval=setInterval(()=>{
-if(seconds>0){seconds--;showTimer()}
-else{pauseTimer();alert("Focus session complete! 🎉")}
+if(seconds>0){
+seconds--;
+showTimer();
+return;
+}
+
+completeTimer();
+
 },1000);
 }
 
 function pauseTimer(){
-clearInterval(timerInterval);timerInterval=null;
+clearInterval(timerInterval);
+timerInterval=null;
 }
 
 function resetTimer(){
-pauseTimer();seconds=1500;showTimer();
+pauseTimer();
+seconds=modes[mode];
+showTimer();
+
+document.getElementById("sessionMsg").textContent=
+"Timer reset.";
+}
+
+function completeTimer(){
+pauseTimer();
+
+if(mode==="focus"){
+data.focusSessions++;
+data.focusMinutes+=25;
+
+save();
+renderStats();
+
+document.getElementById("sessionMsg").textContent=
+"Focus session complete! 🎉 Take a break.";
+
+alert("Focus session complete! 🎉");
+setMode("short");
+
+}else if(mode==="short"){
+document.getElementById("sessionMsg").textContent=
+"Short break complete. Ready to focus.";
+
+alert("Break complete! Ready to focus.");
+setMode("focus");
+
+}else{
+document.getElementById("sessionMsg").textContent=
+"Long break complete. Fresh start! 🚀";
+
+alert("Long break complete! 🚀");
+setMode("focus");
+}
 }
 
 showTimer();
+updateModeUI();
 render();
 </script>
+
 </body>
 </html>
