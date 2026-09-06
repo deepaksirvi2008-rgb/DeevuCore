@@ -166,7 +166,12 @@ font-size:11px;padding:22px
 
 <section class="card full">
 <h2>🎯 Today's Goal</h2>
-<div id="goalArea"></div>
+<div id="goalArea">
+<div class="row">
+<input id="goalInput" placeholder="Set your main goal for today">
+<button class="primary" onclick="saveGoal()">Save</button>
+</div>
+</div>
 </section>
 
 <section class="card full">
@@ -239,13 +244,24 @@ font-size:11px;padding:22px
 
 <div class="mode-controls">
 <button id="focusBtn" class="active" onclick="setMode('focus')">
-🎯 Focus 25m
+🎯 Focus <span id="focusLabel">25m</span>
 </button>
 <button id="shortBtn" onclick="setMode('short')">
-☕ Short 5m
+☕ Short <span id="shortLabel">5m</span>
 </button>
 <button id="longBtn" onclick="setMode('long')">
-🌙 Long 15m
+🌙 Long <span id="longLabel">15m</span>
+</button>
+</div>
+
+<div style="margin-top:14px">
+<div class="row" style="max-width:520px;margin:auto">
+<input id="customFocus" type="number" min="1" max="180" placeholder="Focus minutes">
+<input id="customShort" type="number" min="1" max="60" placeholder="Short break">
+<input id="customLong" type="number" min="1" max="120" placeholder="Long break">
+</div>
+<button class="primary" style="margin-top:8px" onclick="saveTimerSettings()">
+⚙️ Save Timer Settings
 </button>
 </div>
 
@@ -317,26 +333,53 @@ localStorage.setItem(KEY,JSON.stringify(data));
 function renderGoal(){
 const a=document.getElementById("goalArea");
 
-if(!data.goal){
-a.innerHTML=
-'<div class="row">'+
-'<input id="goalInput" placeholder="Set your main goal for today">'+
-'<button class="primary" onclick="saveGoal()">Save</button>'+
-'</div>';
-return;
-}
+a.innerHTML="";
 
-a.innerHTML=
-'<div class="goal '+(data.goalDone?"done":"")+'">'+
-escapeHTML(data.goal)+
-'</div>'+
-'<div class="goal-actions">'+
-'<button onclick="toggleGoal()">'+
-(data.goalDone?"↩️ Undo":"✅ Complete")+
-'</button>'+
-'<button onclick="editGoal()">✏️ Edit</button>'+
-'<button class="danger" onclick="clearGoal()">🗑️ Clear</button>'+
-'</div>';
+const row=document.createElement("div");
+row.className="row";
+
+const input=document.createElement("input");
+input.id="goalInput";
+input.placeholder="Set your main goal for today";
+input.value=data.goal||"";
+input.maxLength=150;
+
+const btn=document.createElement("button");
+btn.className="primary";
+btn.textContent="Save";
+btn.onclick=saveGoal;
+
+row.appendChild(input);
+row.appendChild(btn);
+a.appendChild(row);
+
+if(data.goal){
+const goal=document.createElement("div");
+goal.className="goal"+(data.goalDone?" done":"");
+goal.textContent=data.goal;
+a.appendChild(goal);
+
+const actions=document.createElement("div");
+actions.className="goal-actions";
+
+const complete=document.createElement("button");
+complete.textContent=data.goalDone?"↩️ Undo":"✅ Complete";
+complete.onclick=toggleGoal;
+
+const edit=document.createElement("button");
+edit.textContent="✏️ Edit";
+edit.onclick=editGoal;
+
+const clear=document.createElement("button");
+clear.className="danger";
+clear.textContent="🗑️ Clear";
+clear.onclick=clearGoal;
+
+actions.appendChild(complete);
+actions.appendChild(edit);
+actions.appendChild(clear);
+a.appendChild(actions);
+}
 }
 
 function saveGoal(){
@@ -610,17 +653,99 @@ document.body.classList.contains("light")?
 
 /* FOCUS ENGINE */
 
-const modes={
-focus:1500,
-short:300,
-long:900
+const TIMER_KEY="deevucore_timer_settings";
+const TIMER_STATE_KEY="deevucore_timer_state";
+
+let timerSettings=JSON.parse(
+localStorage.getItem(TIMER_KEY)||"null"
+)||{
+focus:25,
+short:5,
+long:15
 };
 
+function durationFor(modeName){
+return Number(timerSettings[modeName])*60;
+}
+
+function loadTimerSettingsUI(){
+document.getElementById("customFocus").value=timerSettings.focus;
+document.getElementById("customShort").value=timerSettings.short;
+document.getElementById("customLong").value=timerSettings.long;
+
+document.getElementById("focusLabel").textContent=timerSettings.focus+"m";
+document.getElementById("shortLabel").textContent=timerSettings.short+"m";
+document.getElementById("longLabel").textContent=timerSettings.long+"m";
+}
+
+function saveTimerSettings(){
+
+const focus=Math.max(
+1,
+Math.min(
+180,
+Number(document.getElementById("customFocus").value)||25
+)
+);
+
+const short=Math.max(
+1,
+Math.min(
+60,
+Number(document.getElementById("customShort").value)||5
+)
+);
+
+const long=Math.max(
+1,
+Math.min(
+120,
+Number(document.getElementById("customLong").value)||15
+)
+);
+
+timerSettings={
+focus:focus,
+short:short,
+long:long
+};
+
+localStorage.setItem(
+TIMER_KEY,
+JSON.stringify(timerSettings)
+);
+
+pauseTimer();
+
+seconds=durationFor(mode);
+
+loadTimerSettingsUI();
+showTimer();
+
+document.getElementById("sessionMsg").textContent=
+"Timer settings saved successfully.";
+}
+
 let mode="focus";
-let seconds=modes.focus;
+let seconds=durationFor("focus");
 let timerInterval=null;
+let lastTick=null;
+
+function saveTimerState(running=false){
+
+localStorage.setItem(
+TIMER_STATE_KEY,
+JSON.stringify({
+mode:mode,
+seconds:Math.max(0,Math.floor(seconds)),
+running:running,
+lastTick:running?Date.now():null
+})
+);
+}
 
 function updateModeUI(){
+
 const labels={
 focus:"FOCUS",
 short:"SHORT BREAK",
@@ -630,33 +755,45 @@ long:"LONG BREAK"
 document.getElementById("modeLabel").textContent=labels[mode];
 
 document.getElementById("focusBtn").classList.toggle(
-"active",mode==="focus"
+"active",
+mode==="focus"
 );
 
 document.getElementById("shortBtn").classList.toggle(
-"active",mode==="short"
+"active",
+mode==="short"
 );
 
 document.getElementById("longBtn").classList.toggle(
-"active",mode==="long"
+"active",
+mode==="long"
 );
 }
 
 function showTimer(){
-const m=Math.floor(seconds/60)
-.toString().padStart(2,"0");
 
-const s=(seconds%60)
-.toString().padStart(2,"0");
+const safe=Math.max(0,Math.floor(seconds));
+
+const m=Math.floor(safe/60)
+.toString()
+.padStart(2,"0");
+
+const sec=(safe%60)
+.toString()
+.padStart(2,"0");
 
 document.getElementById("timer").textContent=
-m+":"+s;
+m+":"+sec;
 }
 
 function setMode(newMode){
+
 pauseTimer();
+
 mode=newMode;
-seconds=modes[mode];
+seconds=durationFor(mode);
+
+saveTimerState(false);
 updateModeUI();
 showTimer();
 
@@ -671,33 +808,68 @@ messages[mode];
 }
 
 function startTimer(){
+
 if(timerInterval)return;
 
+lastTick=Date.now();
+
+saveTimerState(true);
+
 document.getElementById("sessionMsg").textContent=
-mode==="focus"?
-"Focus mode running... stay on task 💪":
-"Break running... recharge ☕";
+mode==="focus"
+?"Focus mode running... stay on task 💪"
+:"Break running... recharge ☕";
 
 timerInterval=setInterval(()=>{
-if(seconds>0){
-seconds--;
+
+const now=Date.now();
+
+const elapsed=Math.floor(
+(now-lastTick)/1000
+);
+
+if(elapsed<1)return;
+
+seconds-=elapsed;
+lastTick=now;
+
+if(seconds<=0){
+
+seconds=0;
 showTimer();
-return;
-}
 
 completeTimer();
 
-},1000);
+return;
+}
+
+saveTimerState(true);
+showTimer();
+
+},250);
 }
 
 function pauseTimer(){
+
+if(timerInterval){
+
 clearInterval(timerInterval);
 timerInterval=null;
 }
 
+saveTimerState(false);
+
+document.getElementById("sessionMsg").textContent=
+"Timer paused.";
+}
+
 function resetTimer(){
+
 pauseTimer();
-seconds=modes[mode];
+
+seconds=durationFor(mode);
+
+saveTimerState(false);
 showTimer();
 
 document.getElementById("sessionMsg").textContent=
@@ -705,11 +877,13 @@ document.getElementById("sessionMsg").textContent=
 }
 
 function completeTimer(){
+
 pauseTimer();
 
 if(mode==="focus"){
+
 data.focusSessions++;
-data.focusMinutes+=25;
+data.focusMinutes+=timerSettings.focus;
 
 save();
 renderStats();
@@ -718,26 +892,85 @@ document.getElementById("sessionMsg").textContent=
 "Focus session complete! 🎉 Take a break.";
 
 alert("Focus session complete! 🎉");
+
 setMode("short");
 
 }else if(mode==="short"){
+
 document.getElementById("sessionMsg").textContent=
 "Short break complete. Ready to focus.";
 
 alert("Break complete! Ready to focus.");
+
 setMode("focus");
 
 }else{
+
 document.getElementById("sessionMsg").textContent=
 "Long break complete. Fresh start! 🚀";
 
 alert("Long break complete! 🚀");
+
 setMode("focus");
 }
 }
 
-showTimer();
+function restoreTimer(){
+
+const saved=JSON.parse(
+localStorage.getItem(TIMER_STATE_KEY)||"null"
+);
+
+if(!saved){
+
+mode="focus";
+seconds=durationFor("focus");
+
 updateModeUI();
+showTimer();
+
+return;
+}
+
+mode=saved.mode||"focus";
+
+seconds=Number(saved.seconds);
+
+if(!Number.isFinite(seconds)){
+seconds=durationFor(mode);
+}
+
+if(saved.running && saved.lastTick){
+
+const elapsed=Math.floor(
+(Date.now()-Number(saved.lastTick))/1000
+);
+
+seconds-=Math.max(0,elapsed);
+
+if(seconds<=0){
+
+seconds=0;
+showTimer();
+completeTimer();
+
+return;
+}
+
+updateModeUI();
+showTimer();
+startTimer();
+
+return;
+}
+
+updateModeUI();
+showTimer();
+}
+
+loadTimerSettingsUI();
+restoreTimer();
+
 render();
 </script>
 
