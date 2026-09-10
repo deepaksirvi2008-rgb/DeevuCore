@@ -292,6 +292,60 @@ DeevuCore V2.3.1 • Focus on what matters 🚀
 <script>
 const KEY="deevucore_v23";
 const oldKey="deevucore_v22";
+/* =========================
+   DEEVUCORE STORAGE ENGINE
+   V2.4.0
+========================= */
+
+function safeGetJSON(key, fallback = null) {
+  try {
+    const raw = localStorage.getItem(key);
+
+    if (raw === null || raw === "") {
+      return fallback;
+    }
+
+    const parsed = JSON.parse(raw);
+    return parsed === null ? fallback : parsed;
+
+  } catch (error) {
+    console.warn("DeevuCore Storage Read Error:", key, error);
+    return fallback;
+  }
+}
+
+function safeSetJSON(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+
+  } catch (error) {
+    console.error("DeevuCore Storage Write Error:", key, error);
+    return false;
+  }
+}
+
+function safeGet(key, fallback = null) {
+  try {
+    const value = localStorage.getItem(key);
+    return value === null ? fallback : value;
+
+  } catch (error) {
+    console.warn("DeevuCore Storage Read Error:", key, error);
+    return fallback;
+  }
+}
+
+function safeSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+    return true;
+
+  } catch (error) {
+    console.error("DeevuCore Storage Write Error:", key, error);
+    return false;
+  }
+}
 
 function dateKey(d=new Date()){
 return d.getFullYear()+"-"+
@@ -299,8 +353,8 @@ String(d.getMonth()+1).padStart(2,"0")+"-"+
 String(d.getDate()).padStart(2,"0");
 }
 
-let old=JSON.parse(localStorage.getItem(oldKey)||"null");
-let data=JSON.parse(localStorage.getItem(KEY)||"null");
+let old=safeGetJSON(oldKey,null);
+let data=safeGetJSON(KEY,null);
 
 if(!data){
 data={
@@ -327,7 +381,7 @@ save();
 }
 
 function save(){
-localStorage.setItem(KEY,JSON.stringify(data));
+  return safeSetJSON(KEY,data);
 }
 
 function renderGoal(){
@@ -636,7 +690,7 @@ n.toLocaleTimeString("en-IN");
 setInterval(updateClock,1000);
 updateClock();
 
-const savedTheme=localStorage.getItem("deevucoreTheme");
+const savedTheme=safeGet("deevucoreTheme",null);
 
 if(savedTheme==="light")
 document.body.classList.add("light");
@@ -644,11 +698,12 @@ document.body.classList.add("light");
 document.getElementById("theme").onclick=()=>{
 document.body.classList.toggle("light");
 
-localStorage.setItem(
-"deevucoreTheme",
-document.body.classList.contains("light")?
-"light":"dark"
-);
+safeSet(
+ "deevucoreTheme",
+ document.body.classList.contains("light")
+   ? "light"
+   : "dark"
+ );
 };
 
 /* FOCUS ENGINE */
